@@ -50,11 +50,11 @@ public class Proj6 {
         }
 
 
-            System.out.println("Best Node: " + winner + " Items: " + treeMap.get(winner) +
-                    " level: " + treeMap.get(winner).level +
-                    " profit: " + treeMap.get(winner).profit +
-                    " weight: " + treeMap.get(winner).weight +
-                    " bound: " + treeMap.get(winner).bound);
+        System.out.println("Best Node: " + winner + " Items: " + treeMap.get(winner) +
+                " level: " + treeMap.get(winner).level +
+                " profit: " + treeMap.get(winner).profit +
+                " weight: " + treeMap.get(winner).weight +
+                " bound: " + treeMap.get(winner).bound);
     }
 
 
@@ -74,16 +74,19 @@ public class Proj6 {
 
 
     public static void GenerateChildren(int parent) {
-        Node node = new Node();
 
-        node.items = treeMap.get(parent).items;
-        node.level = treeMap.get(parent).level + 1;
-        node.profit = treeMap.get(parent).profit;
-        node.weight = treeMap.get(parent).weight;
-        node.relations[0] = parent;
 
         // Left Child
         if (treeMap.get(parent).relations[1] == 0) {
+            Node node = new Node();
+
+            node.items = treeMap.get(parent).items;
+            node.level = treeMap.get(parent).level + 1;
+            node.profit = treeMap.get(parent).profit;
+            node.weight = treeMap.get(parent).weight;
+            node.relations[0] = parent;
+
+
             node.nodeNum = parent + 1;
             treeMap.get(parent).relations[1] = node.nodeNum;
             node.level = treeMap.get(parent).level + 1;
@@ -93,11 +96,21 @@ public class Proj6 {
         }
         // Right Child
         if (treeMap.get(parent).relations[2] == 0) {
+            Node node = new Node();
+
+            node.items = treeMap.get(parent).items;
+            node.level = treeMap.get(parent).level + 1;
+            node.profit = treeMap.get(parent).profit;
+            node.weight = treeMap.get(parent).weight;
+            node.relations[0] = parent;
+
             node.nodeNum = parent + 2;
             treeMap.get(parent).relations[2] = node.nodeNum;
             System.out.println();
 //            node.items[node.items.size() - 1] = node.level;
             node.items.add(node.level);
+//            System.out.println("(GC) rights item size" + node.items.size());
+            node.profit += items[0][node.level];
             node.weight += items[1][node.level];
             if (node.weight > capacity){
                 node.profit = -1;
@@ -119,19 +132,21 @@ public class Proj6 {
         int PLoad = node.weight;      // Plausible load
         int load = node.weight;
         int cantUse = -1;
-        if (left) {
-            cantUse = node.level;
-        }
+//        if (left) {
+//            cantUse = node.level;
+//        }
         while (PLoad <= capacity) {
 
-            if (node.items.size() != 0 && i < node.items.size()) {
-                System.out.println("I am the contains!!!   " + node.items.get(i - 1));
+//            System.out.println("(GetBound) items size: " + node.items.size());
+            if (node.items.size() != 0 && i - 1 < node.items.size()) {
+                System.out.println("I am the contains!!!   " + Integer.valueOf((node.items.get(i - 1)).toString()));
+                cantUse = Integer.valueOf((node.items.get(i - 1)).toString());
 //                cantUse = int(node.items.get(i - 1));
 //                System.out.println("YOU CANT USE ME: " + cantUse);
             }
-//            if (i == node.level) {
-//                cantUse = node.level;
-//            }
+            else if (i == node.level && left) {
+                cantUse = node.level;
+            }
 
             if (i != cantUse) {
 
@@ -230,12 +245,12 @@ public class Proj6 {
     public static void PrintNodes(Node node, String who){
         String itemString = "[";
         if (node.items.size() != 0) {
-            itemString += " " + node.items.get(0);
+            itemString += node.items.get(0);
         }
 
 //        for (int i = 0; i < node.items.length; i++) {
 //        itemString += node.items[i] + " ,";
-        for (int i = 0; i < node.items.size(); i++) {
+        for (int i = 1; i < node.items.size(); i++) {
             itemString += ", " +node.items.get(i);
         }
         itemString += "]";
@@ -244,7 +259,7 @@ public class Proj6 {
                 " level: " + node.level +
                 " profit: " + node.profit +
                 " weight: " + node.weight +
-                " bound: " + node.bound);
+                " bound: " + node.bound + " >");
     }
 }
 

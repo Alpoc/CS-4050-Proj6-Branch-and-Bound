@@ -20,6 +20,9 @@ public class Node{
 
     }
 
+//    private int getArrayItem(int index) {
+//        return items.get(index);
+//    }
 //    public int getWeight() {
 //        return weight;
 //    }
