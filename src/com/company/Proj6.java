@@ -5,6 +5,7 @@ import sun.reflect.generics.tree.Tree;
 import java.io.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.TreeMap;
 
@@ -14,6 +15,7 @@ import static sun.management.Agent.error;
 public class Proj6 {
     static int items[][];
     static int capacity;   // capacity of the knapsack
+    static ArrayList<Integer> availableNodes = new ArrayList<>();
     static TreeMap<Integer, Node> treeMap = new TreeMap<Integer, Node>();
 
     public static void main(String[] args) {
@@ -60,7 +62,8 @@ public class Proj6 {
 
     public static void GenerateRootNode() {
         if (treeMap.size() == 0) {
-            ArrayList empty = new ArrayList<Integer>();   // need to initialize items in the object to an empty array
+            List<Integer> empty = new ArrayList<>();
+            //ArrayList empty = new ArrayList<Integer>();   // need to initialize items in the object to an empty array
             Node node = new Node();
             node.nodeNum = 1;
             node.level = 0;
@@ -140,7 +143,8 @@ public class Proj6 {
 //            System.out.println("(GetBound) items size: " + node.items.size());
             if (node.items.size() != 0 && i - 1 < node.items.size()) {
                 System.out.println("I am the contains!!!   " + Integer.valueOf((node.items.get(i - 1)).toString()));
-                cantUse = Integer.valueOf((node.items.get(i - 1)).toString());
+                //cantUse = Integer.valueOf((node.items.get(i - 1)).toString());
+                cantUse = node.items.get(i -1);
 //                cantUse = int(node.items.get(i - 1));
 //                System.out.println("YOU CANT USE ME: " + cantUse);
             }
@@ -171,29 +175,36 @@ public class Proj6 {
         return node;
     }
 
-    public static int FindBest() {
+//    public static int FindBest() {
+//        int best = -1;
+////        System.out.println("(FindBest) treeMap size: " + treeMap.size());
+//        for (int i = 1; i <= treeMap.size(); i++) {
+//            if (treeMap.get(i).relations[1] == 0 && treeMap.get(i).relations[2] == 0) {
+//                if (best == -1) {
+//                    best = i;
+//                }
+//                else if (treeMap.get(best).bound < treeMap.get(i).bound) {
+////                    System.out.println("(FindBest) is node " + treeMap.get(best).nodeNum + ": " + treeMap.get(best).bound +
+////                            " < " + treeMap.get(i).nodeNum + ": " + treeMap.get(i).bound);
+//                    best = i;
+//                }
+//            }
+//
+//        }
+//
+////        System.out.print("(FindBest) Best node: ");    System.out.println(best);
+////        System.out.print("(FindBest) best nodes bound: ");  System.out.println(treeMap.get(best).bound);
+//
+//        return best;
+//    }
+
+    public static int FindBest(){
         int best = -1;
-//        System.out.println("(FindBest) treeMap size: " + treeMap.size());
-        for (int i = 1; i <= treeMap.size(); i++) {
-            if (treeMap.get(i).relations[1] == 0 && treeMap.get(i).relations[2] == 0) {
-                if (best == -1) {
-                    best = i;
-                }
-                else if (treeMap.get(best).bound < treeMap.get(i).bound) {
-//                    System.out.println("(FindBest) is node " + treeMap.get(best).nodeNum + ": " + treeMap.get(best).bound +
-//                            " < " + treeMap.get(i).nodeNum + ": " + treeMap.get(i).bound);
-                    best = i;
-                }
-            }
 
-        }
 
-//        System.out.print("(FindBest) Best node: ");    System.out.println(best);
-//        System.out.print("(FindBest) best nodes bound: ");  System.out.println(treeMap.get(best).bound);
 
         return best;
     }
-
 
     public static void fillList() {
         System.out.print("Please enter the name of the file you would like processed: ");
