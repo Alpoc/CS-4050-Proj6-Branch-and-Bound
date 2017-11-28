@@ -12,11 +12,10 @@ import java.util.TreeMap;
 import static com.sun.org.apache.xalan.internal.xsltc.compiler.sym.error;
 import static sun.management.Agent.error;
 
-public class Proj6 {
+public class Proj62 {
     static int items[][];
     static int capacity;   // capacity of the knapsack
-    static ArrayList<Integer> availableNodes = new ArrayList<>();
-    static TreeMap<Integer, Node> treeMap = new TreeMap<Integer, Node>();
+    static ArrayList<Node> availableNodes = new ArrayList<>();
 
     public static void main(String[] args) {
         fillList();
@@ -28,40 +27,32 @@ public class Proj6 {
                     " " + items[2][i]);
         }
         GenerateRootNode();
-        BranchAndBound(treeMap.get(1));
-        //GenerateChildren(treeMap.get(1).nodeNum, );
 
     }
 
     public static void BranchAndBound(Node parent) {
-        PrintNodes(parent, "Exploring");
 
-        int winner = -1;
-        //System.out.println("Parent level: " + parent.level);
-//        System.out.println("(BnB) items length: " + items[2].length);
-//        System.out.print("(BnB) parent nodeNum: ");   System.out.println(parent.nodeNum);
-        if (parent.level == items[2].length && parent.nodeNum == FindBest()) {
-            winner = parent.nodeNum;
+
+
+//        if (parent.level == (items[2].length - 1) && parent.nodeNum == FindBest()) {
+        if (parent.level == (items[2].length - 1) && parent == FindBest()) {
+            PrintNodes(parent, "Winner");
         }
-        else if (parent.weight == capacity && parent.nodeNum == FindBest()){
-            winner = parent.nodeNum;
+//        else if (parent.weight == capacity && parent.nodeNum == FindBest()){
+        else if (parent.weight == capacity && parent == FindBest()){
+            PrintNodes(parent, "Winner");
         }
         else {
-            GenerateChildren(parent.nodeNum);
-            BranchAndBound(treeMap.get(FindBest()));
+            PrintNodes(parent, "Exploring");
+            GenerateChildren(parent);
+//            BranchAndBound(availableNodes.get(FindBest()));
+            BranchAndBound(FindBest());
         }
-
-
-        System.out.println("Best Node: " + winner + " Items: " + treeMap.get(winner) +
-                " level: " + treeMap.get(winner).level +
-                " profit: " + treeMap.get(winner).profit +
-                " weight: " + treeMap.get(winner).weight +
-                " bound: " + treeMap.get(winner).bound);
     }
 
 
     public static void GenerateRootNode() {
-        if (treeMap.size() == 0) {
+        if (availableNodes.size() == 0) {
             List<Integer> empty = new ArrayList<>();
             //ArrayList empty = new ArrayList<Integer>();   // need to initialize items in the object to an empty array
             Node node = new Node();
@@ -69,65 +60,63 @@ public class Proj6 {
             node.level = 0;
             node.items = empty;         // Initializing so we can compare in GetBound
             node = GetBound(node, false);
-            treeMap.put(1, node);
+            availableNodes.add(node);
+            BranchAndBound(node);
         } else {
             error("Tree not empty");
         }
+
     }
 
 
-    public static void GenerateChildren(int parent) {
-
+    public static void GenerateChildren(Node parent) {
 
         // Left Child
-        if (treeMap.get(parent).relations[1] == 0) {
-            Node node = new Node();
+        Node node = new Node();
 
-            node.items = treeMap.get(parent).items;
-            node.level = treeMap.get(parent).level + 1;
-            node.profit = treeMap.get(parent).profit;
-            node.weight = treeMap.get(parent).weight;
-            node.relations[0] = parent;
+        node.items = parent.items;
+        node.level = parent.level + 1;
+        node.profit = parent.profit;
+        node.weight = parent.weight;
+        node.nodeNum = parent.nodeNum + 1;
+        node.level = parent.level + 1;
+        node = GetBound(node, true);
+        availableNodes.add(node);
+        PrintNodes(node, "    Left");
 
-
-            node.nodeNum = parent + 1;
-            treeMap.get(parent).relations[1] = node.nodeNum;
-            node.level = treeMap.get(parent).level + 1;
-            node = GetBound(node, true);
-            treeMap.put(treeMap.size() + 1, node);
-            PrintNodes(node, "    Left");
-        }
         // Right Child
-        if (treeMap.get(parent).relations[2] == 0) {
-            Node node = new Node();
+        Node nodeR = new Node();
 
-            node.items = treeMap.get(parent).items;
-            node.level = treeMap.get(parent).level + 1;
-            node.profit = treeMap.get(parent).profit;
-            node.weight = treeMap.get(parent).weight;
-            node.relations[0] = parent;
+        nodeR.items = parent.items;
+        nodeR.level = parent.level + 1;
+        nodeR.profit = parent.profit;
+        nodeR.weight = parent.weight;
 
-            node.nodeNum = parent + 2;
-            treeMap.get(parent).relations[2] = node.nodeNum;
-            System.out.println();
-//            node.items[node.items.size() - 1] = node.level;
-            node.items.add(node.level);
+        nodeR.nodeNum = parent.nodeNum + 2;
+        nodeR.items.add(node.level);
 //            System.out.println("(GC) rights item size" + node.items.size());
-            node.profit += items[0][node.level];
-            node.weight += items[1][node.level];
-            if (node.weight > capacity){
-                node.profit = -1;
-                node.bound = -1;
-            }
-            else {
-                node = GetBound(node, false);
-            }
-            treeMap.put(treeMap.size() + 1, node);
-            PrintNodes(node, "    Right");
-            System.out.println();
+        nodeR.profit += items[0][nodeR.level];
+        nodeR.weight += items[1][nodeR.level];
+        if (nodeR.weight > capacity){
+            nodeR.profit = -1;
+            nodeR.bound = -1;
+            PrintNodes(nodeR, "    Right");
+            System.out.println("Pruned because to heavy");
+        }
+        else {
+            nodeR = GetBound(nodeR, false);
+            availableNodes.add(nodeR);
+            PrintNodes(nodeR, "    Right");
+        }
+
+        availableNodes.remove(parent);
+
+
+        System.out.println("");
+
 
         }
-    }
+
 
 
     public static Node GetBound(Node node, Boolean left) {
@@ -140,13 +129,10 @@ public class Proj6 {
 //        }
         while (PLoad <= capacity) {
 
-//            System.out.println("(GetBound) items size: " + node.items.size());
-            if (node.items.size() != 0 && i - 1 < node.items.size()) {
-                System.out.println("I am the contains!!!   " + Integer.valueOf((node.items.get(i - 1)).toString()));
+            if (node.items.size() != 0 && i < node.items.size()) {
                 //cantUse = Integer.valueOf((node.items.get(i - 1)).toString());
-                cantUse = node.items.get(i -1);
+                cantUse = node.items.get(i);
 //                cantUse = int(node.items.get(i - 1));
-//                System.out.println("YOU CANT USE ME: " + cantUse);
             }
             else if (i == node.level && left) {
                 cantUse = node.level;
@@ -177,34 +163,32 @@ public class Proj6 {
 
 //    public static int FindBest() {
 //        int best = -1;
-////        System.out.println("(FindBest) treeMap size: " + treeMap.size());
-//        for (int i = 1; i <= treeMap.size(); i++) {
-//            if (treeMap.get(i).relations[1] == 0 && treeMap.get(i).relations[2] == 0) {
+//        for (int i = 0; i < availableNodes.size(); i++) {
 //                if (best == -1) {
 //                    best = i;
 //                }
-//                else if (treeMap.get(best).bound < treeMap.get(i).bound) {
-////                    System.out.println("(FindBest) is node " + treeMap.get(best).nodeNum + ": " + treeMap.get(best).bound +
-////                            " < " + treeMap.get(i).nodeNum + ": " + treeMap.get(i).bound);
+//                else if (availableNodes.get(best).bound < availableNodes.get(i).bound) {
 //                    best = i;
 //                }
 //            }
+//            return best;
 //
 //        }
-//
-////        System.out.print("(FindBest) Best node: ");    System.out.println(best);
-////        System.out.print("(FindBest) best nodes bound: ");  System.out.println(treeMap.get(best).bound);
-//
-//        return best;
-//    }
 
-    public static int FindBest(){
-        int best = -1;
-
-
-
+    public static Node FindBest() {
+        Node best = null;
+        for (int i = 0; i < availableNodes.size(); i++) {
+            if (best == null) {
+                best = availableNodes.get(i);
+            }
+            else if (best.bound < availableNodes.get(i).bound) {
+                best = availableNodes.get(i);
+            }
+        }
         return best;
+
     }
+
 
     public static void fillList() {
         System.out.print("Please enter the name of the file you would like processed: ");
