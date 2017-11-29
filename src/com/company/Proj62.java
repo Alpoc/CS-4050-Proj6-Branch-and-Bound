@@ -35,7 +35,7 @@ public class Proj62 {
 
 
 //        if (parent.level == (items[2].length - 1) && parent.nodeNum == FindBest()) {
-        if (parent.level == (items[2].length - 1) && parent == FindBest()) {
+        if (parent.level == (items[2].length) && parent == FindBest()) {
             PrintNodes(parent, "Winner");
         }
 //        else if (parent.weight == capacity && parent.nodeNum == FindBest()){
@@ -74,12 +74,11 @@ public class Proj62 {
         // Left Child
         Node node = new Node();
 
-        node.items = parent.items;
+        node.items = new ArrayList<Integer>(parent.items);
         node.level = parent.level + 1;
         node.profit = parent.profit;
         node.weight = parent.weight;
-        node.nodeNum = parent.nodeNum + 1;
-        node.level = parent.level + 1;
+        node.nodeNum = parent.nodeNum * 2;
         node = GetBound(node, true);
         availableNodes.add(node);
         PrintNodes(node, "    Left");
@@ -87,16 +86,17 @@ public class Proj62 {
         // Right Child
         Node nodeR = new Node();
 
-        nodeR.items = parent.items;
+        nodeR.items = new ArrayList<Integer>(parent.items);
         nodeR.level = parent.level + 1;
         nodeR.profit = parent.profit;
         nodeR.weight = parent.weight;
 
-        nodeR.nodeNum = parent.nodeNum + 2;
+        nodeR.nodeNum = parent.nodeNum * 2 + 1;
         nodeR.items.add(node.level);
 //            System.out.println("(GC) rights item size" + node.items.size());
         nodeR.profit += items[0][nodeR.level];
         nodeR.weight += items[1][nodeR.level];
+//        nodeR.bound += items[1][nodeR.level];
         if (nodeR.weight > capacity){
             nodeR.profit = -1;
             nodeR.bound = -1;
@@ -108,10 +108,7 @@ public class Proj62 {
             availableNodes.add(nodeR);
             PrintNodes(nodeR, "    Right");
         }
-
         availableNodes.remove(parent);
-
-
         System.out.println("");
 
 
@@ -120,18 +117,21 @@ public class Proj62 {
 
 
     public static Node GetBound(Node node, Boolean left) {
-        int i = 1;
+        int i = 0;
         int PLoad = node.weight;      // Plausible load
         int load = node.weight;
         int cantUse = -1;
 //        if (left) {
 //            cantUse = node.level;
 //        }
+
         while (PLoad <= capacity) {
 
-            if (node.items.size() != 0 && i < node.items.size()) {
+            if (node.items.size() > 0 && (i) < node.items.size()) {
                 //cantUse = Integer.valueOf((node.items.get(i - 1)).toString());
+
                 cantUse = node.items.get(i);
+                node.bound += items[1][i];
 //                cantUse = int(node.items.get(i - 1));
             }
             else if (i == node.level && left) {
@@ -145,7 +145,7 @@ public class Proj62 {
                 // Add profit to the bound if its weight still under cap
                 if (PLoad <= capacity) {
                     load += items[1][i];
-                    node.bound += items[0][i];
+//                    System.out.println("Node Bound in GB: " + node.bound);
                 }
                 if (PLoad >= capacity) {
                     break;
@@ -157,6 +157,7 @@ public class Proj62 {
         if (load != capacity) {
             int remainingLoad = capacity - load;
             node.bound += remainingLoad * items[2][i];
+//            System.out.println("remaining bound: " + node.bound);
         }
         return node;
     }
@@ -208,9 +209,9 @@ public class Proj62 {
                     new Scanner(file);
             capacity = fileScanner.nextInt();
             numItems = fileScanner.nextInt();
-            items = new int[3][numItems + 1];   //Prof want's the items to be labeled starting with one,
+            items = new int[3][numItems];   //Prof want's the items to be labeled starting with one,
             // im just going to leave the 0th index blank for ease of use
-            int j = 1;
+            int j = 0;
             while (fileScanner.hasNext()) {
                 profit = fileScanner.nextInt();
                 weight = fileScanner.nextInt();
@@ -245,7 +246,7 @@ public class Proj62 {
 
 //        for (int i = 0; i < node.items.length; i++) {
 //        itemString += node.items[i] + " ,";
-        for (int i = 1; i < node.items.size(); i++) {
+        for (int i = 0; i < node.items.size(); i++) {
             itemString += ", " +node.items.get(i);
         }
         itemString += "]";
