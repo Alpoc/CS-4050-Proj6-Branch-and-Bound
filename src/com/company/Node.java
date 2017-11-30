@@ -11,13 +11,15 @@ public class Node{
     public int weight = 0;      // total weight
     public int bound;       // bound that will be used to determine how good it is
     public int relations[] = new int[3]; // 0 parent, 1 left child, 2 right child
+    public List<Integer> cantUse;
 
-    public void Node(int num, List item, int p, int w, int b){
+    public void Node(int num, List item, int p, int w, int b, List cantUseNums){
         nodeNum = num;
         items = item;
         profit = p;
         weight = w;
         bound = b;
+        cantUse = cantUseNums;
 
     }
 
