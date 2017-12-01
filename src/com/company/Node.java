@@ -22,15 +22,4 @@ public class Node{
         cantUse = cantUseNums;
 
     }
-
-//    private int getArrayItem(int index) {
-//        return items.get(index);
-//    }
-//    public int getWeight() {
-//        return weight;
-//    }
-//
-//    public int getProfit() {
-//        return profit;
-//    }
 }
