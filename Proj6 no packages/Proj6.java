@@ -1,4 +1,4 @@
-package com.company;
+//package com.company;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Scanner;
 
 
-public class Proj62 {
+public class Proj6 {
     static int items[][];
     static int capacity;   // capacity of the knapsack
     static int nodeCount = 1;
@@ -235,5 +235,3 @@ public class Proj62 {
                 " bound: " + node.bound + " >" + " cantUse: " + noUse);
     }
 }
-
-

@@ -1,4 +1,4 @@
-package com.company;
+//package com.company;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +23,4 @@ public class Node{
 
     }
 
-//    private int getArrayItem(int index) {
-//        return items.get(index);
-//    }
-//    public int getWeight() {
-//        return weight;
-//    }
-//
-//    public int getProfit() {
-//        return profit;
-//    }
 }
