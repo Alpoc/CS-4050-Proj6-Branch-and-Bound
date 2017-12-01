@@ -131,23 +131,45 @@ public class Proj62 {
         int load = node.weight;
         int cantUse = -1;
 
+        //todo delete me aka for loop
+        for (int x = 0; x < items[2].length; x++) {
+            System.out.println((x + 1) + ": " + items[0][x] + " " + items[1][x] +
+                    " " + items[2][x]);
+        }
+
         while (PLoad <= capacity && i < items[2].length) {
 
-            if (node.items.size() > 0 && i < node.items.size()) {
-                cantUse = node.items.get(i);
-                //TODO im i the one?????????
-                System.out.print("adding " + items[0][i] + " to " + node.bound);
-                node.bound += items[0][i];
-                System.out.println(" to get " + node.bound);
-            }
-//            else if (i == (node.level - 1 ) && left) {
-//                cantUse = node.level;
+//            if (node.items.size() > 0 && i < node.items.size()) {
+//                cantUse = node.items.get(i);
+//                //TODO im i the one?????????
+//                System.out.print("adding " + items[0][i] + " to " + node.bound);
+//                node.bound += items[0][i];
+//                System.out.println(" to get " + node.bound);
+//            }
 
-            //Todo
-            else if (node.cantUse.size() > 0 && i < node.cantUse.size()) {
-                cantUse = node.cantUse.get(i);
-                System.out.println("can use: " + cantUse);
+            for (int k = 0; k < node.items.size(); k++ ) {
+                if ((i + 1) == node.items.get(k)) {
+                    cantUse = node.items.get(k);
+                    //TODO im i the one?????????
+                    System.out.print("adding item " + cantUse + ": " + items[0][k] + " to " + node.bound);
+                    node.bound += items[0][k];
+                    System.out.println(" to get " + node.bound);
+                }
             }
+
+            //Todo fuck shit up
+//            else if (node.cantUse.size() > 0 && i < node.cantUse.size()) {
+//                cantUse = node.cantUse.get(i);
+//                System.out.println("can use: " + cantUse);
+//            }
+
+                for (int k = 0; k < node.cantUse.size(); k++ ) {
+                    if ((i + 1) == node.cantUse.get(k)) {
+                        cantUse = node.cantUse.get(k);
+                        System.out.println("can use: " + cantUse);
+                        break;
+                    }
+                }
 
             if ((i + 1) != cantUse) {
                  PLoad += items[1][i];
@@ -165,7 +187,7 @@ public class Proj62 {
             }
             i++;
         }
-        if (load != capacity && i + 1 != items[2].length) {
+        if (load != capacity && (i + 1) < items[2].length) {
             int remainingLoad = capacity - load;
             System.out.print("Adding " + (remainingLoad * items[2][i]) + " to " + node.bound);
             node.bound += remainingLoad * items[2][i];
