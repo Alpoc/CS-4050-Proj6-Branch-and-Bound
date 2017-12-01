@@ -126,20 +126,11 @@ public class Proj62 {
                     cantUse = node.items.get(k);
                     //TODO im i the one?????????
                     node.bound += items[0][cantUse - 1];
-//                    System.out.println(" to get " + node.bound);
                 }
             }
-
-            //Todo fuck shit up
-//            else if (node.cantUse.size() > 0 && i < node.cantUse.size()) {
-//                cantUse = node.cantUse.get(i);
-//                System.out.println("can use: " + cantUse);
-//            }
-
-                for (int k = 0; k < node.cantUse.size(); k++ ) {
+            for (int k = 0; k < node.cantUse.size(); k++ ) {
                     if ((i + 1) == node.cantUse.get(k)) {
                         cantUse = node.cantUse.get(k);
-//                        System.out.println("can use: " + cantUse);
                         break;
                     }
                 }
@@ -148,9 +139,7 @@ public class Proj62 {
                 // Add profit to the bound if its weight still under cap
                 if (PLoad <= capacity) {
                     load += items[1][i];
-//                    System.out.print("Adding " + items[0][i] + " to " + node.bound);
                     node.bound += items[0][i];
-//                    System.out.println(" to get " + node.bound);
                 }
                 if (PLoad >= capacity) {
                     break;
@@ -164,27 +153,10 @@ public class Proj62 {
         }
         if (load != capacity && (i + 1) <= items[2].length) {
             int remainingLoad = capacity - load;
-//            System.out.print("Adding " + remainingLoad + " * "+ items[2][i] + " = " + (remainingLoad * items[2][i]) + " to " + node.bound);
             node.bound += remainingLoad * items[2][i];
-//            System.out.println(" to get " + node.bound);
-//            System.out.println("remaining bound: " + node.bound);
         }
         return node;
     }
-
-//    public static int FindBest() {
-//        int best = -1;
-//        for (int i = 0; i < availableNodes.size(); i++) {
-//                if (best == -1) {
-//                    best = i;
-//                }
-//                else if (availableNodes.get(best).bound < availableNodes.get(i).bound) {
-//                    best = i;
-//                }
-//            }
-//            return best;
-//
-//        }
 
     public static Node FindBest() {
         Node best = null;
@@ -230,7 +202,6 @@ public class Proj62 {
                 items[2][j] = profPerKilogram;
                 j++;
             }
-
             fileScanner.close();
 
         } catch (FileNotFoundException ex) {
@@ -238,13 +209,6 @@ public class Proj62 {
                     "Unable to open file '" +
                             fileName + "'");
         }
-//            catch(IOException ex) {
-//                System.out.println(
-//                        "Error reading file '"
-//                                + fileName + "'");
-//            }
-
-
     }
 
     public static void PrintNodes(Node node, String who){
@@ -252,7 +216,6 @@ public class Proj62 {
         if (node.items.size() != 0) {
             itemString += node.items.get(0);
         }
-
         for (int i = 1; i < node.items.size(); i++) {
             itemString += ", " +node.items.get(i);
         }
@@ -267,7 +230,6 @@ public class Proj62 {
             noUse += ", " + node.cantUse.get(i);
         }
         noUse += "]";
-
         System.out.println(who + " <Node: " + node.nodeNum +
                 ":   items: " + itemString +
                 " level: " + node.level +
