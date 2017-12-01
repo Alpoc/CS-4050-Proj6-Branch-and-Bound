@@ -3,13 +3,10 @@ package com.company;
 import sun.reflect.generics.tree.Tree;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.TreeMap;
 
-import static com.sun.org.apache.xalan.internal.xsltc.compiler.sym.error;
 import static sun.management.Agent.error;
 
 public class Proj62 {
@@ -33,20 +30,15 @@ public class Proj62 {
 
     public static void BranchAndBound(Node parent) {
 
-
-
-//        if (parent.level == (items[2].length - 1) && parent.nodeNum == FindBest()) {
         if (parent.level == (items[2].length) && parent == FindBest()) {
             PrintNodes(parent, "Winner");
         }
-//        else if (parent.weight == capacity && parent.nodeNum == FindBest()){
         else if (parent.weight == capacity && parent == FindBest()){
             PrintNodes(parent, "Winner");
         }
         else {
             PrintNodes(parent, "Exploring");
             GenerateChildren(parent);
-//            BranchAndBound(availableNodes.get(FindBest()));
             BranchAndBound(FindBest());
         }
     }
@@ -55,7 +47,6 @@ public class Proj62 {
     public static void GenerateRootNode() {
         if (availableNodes.size() == 0) {
             List<Integer> empty = new ArrayList<>();
-            //ArrayList empty = new ArrayList<Integer>();   // need to initialize items in the object to an empty array
             Node node = new Node();
             node.nodeNum = nodeCount;
             node.level = 0;
@@ -100,11 +91,8 @@ public class Proj62 {
         nodeCount++;
         nodeR.nodeNum = nodeCount;
         nodeR.items.add(node.level);
-//            System.out.println("(GC) rights item size" + node.items.size());
         nodeR.profit += items[0][nodeR.level - 1];
         nodeR.weight += items[1][nodeR.level - 1];
-        //TODO or am i!!?!!?
-//        nodeR.bound += items[0][nodeR.level - 1];
         if (nodeR.weight > capacity){
             nodeR.profit = -1;
             nodeR.bound = -1;
@@ -131,29 +119,14 @@ public class Proj62 {
         int load = node.weight;
         int cantUse = -1;
 
-        //todo delete me aka for loop
-        for (int x = 0; x < items[2].length; x++) {
-            System.out.println((x + 1) + ": " + items[0][x] + " " + items[1][x] +
-                    " " + items[2][x]);
-        }
-
         while (PLoad <= capacity && i < items[2].length) {
-
-//            if (node.items.size() > 0 && i < node.items.size()) {
-//                cantUse = node.items.get(i);
-//                //TODO im i the one?????????
-//                System.out.print("adding " + items[0][i] + " to " + node.bound);
-//                node.bound += items[0][i];
-//                System.out.println(" to get " + node.bound);
-//            }
 
             for (int k = 0; k < node.items.size(); k++ ) {
                 if ((i + 1) == node.items.get(k)) {
                     cantUse = node.items.get(k);
                     //TODO im i the one?????????
-                    System.out.print("adding item " + cantUse + ": " + items[0][k] + " to " + node.bound);
-                    node.bound += items[0][k];
-                    System.out.println(" to get " + node.bound);
+                    node.bound += items[0][cantUse - 1];
+//                    System.out.println(" to get " + node.bound);
                 }
             }
 
@@ -166,32 +139,34 @@ public class Proj62 {
                 for (int k = 0; k < node.cantUse.size(); k++ ) {
                     if ((i + 1) == node.cantUse.get(k)) {
                         cantUse = node.cantUse.get(k);
-                        System.out.println("can use: " + cantUse);
+//                        System.out.println("can use: " + cantUse);
                         break;
                     }
                 }
-
             if ((i + 1) != cantUse) {
                  PLoad += items[1][i];
                 // Add profit to the bound if its weight still under cap
                 if (PLoad <= capacity) {
                     load += items[1][i];
-                    System.out.print("Adding " + items[0][i] + " to " + node.bound);
+//                    System.out.print("Adding " + items[0][i] + " to " + node.bound);
                     node.bound += items[0][i];
-                    System.out.println(" to get " + node.bound);
+//                    System.out.println(" to get " + node.bound);
                 }
-                if (PLoad >= capacity || i + 1 >= items[2].length) {
+                if (PLoad >= capacity) {
                     break;
                 }
-
+                else if ((i + 1) >= items[2].length){
+                    i++;
+                    break;
+                }
             }
             i++;
         }
-        if (load != capacity && (i + 1) < items[2].length) {
+        if (load != capacity && (i + 1) <= items[2].length) {
             int remainingLoad = capacity - load;
-            System.out.print("Adding " + (remainingLoad * items[2][i]) + " to " + node.bound);
+//            System.out.print("Adding " + remainingLoad + " * "+ items[2][i] + " = " + (remainingLoad * items[2][i]) + " to " + node.bound);
             node.bound += remainingLoad * items[2][i];
-            System.out.println(" to get " + node.bound);
+//            System.out.println(" to get " + node.bound);
 //            System.out.println("remaining bound: " + node.bound);
         }
         return node;
