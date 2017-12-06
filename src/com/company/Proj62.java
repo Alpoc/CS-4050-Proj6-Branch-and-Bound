@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 
 public class Proj62 {
-    static int items[][];
+    static double items[][];
     static int capacity;   // capacity of the knapsack
     static int nodeCount = 1;
     static ArrayList<Node> availableNodes = new ArrayList<>();
@@ -18,7 +18,7 @@ public class Proj62 {
         System.out.println("Capacity of knapsack is " + capacity +
                 "\nItems are:");
         for (int i = 0; i < items[2].length; i++) {
-            System.out.println((i + 1) + ": " + items[0][i] + " " + items[1][i] +
+            System.out.println((i + 1) + ": " + (int) items[0][i] + " " + (int)items[1][i] +
                     " " + items[2][i]);
         }
         GenerateRootNode();
@@ -175,9 +175,9 @@ public class Proj62 {
         Scanner keyboard = new Scanner(System.in);
         String fileName = keyboard.nextLine();
         int numItems;
-        int profit;
-        int weight;
-        int profPerKilogram;    // It's just no unit weight but kilo for fun.
+        double profit;
+        double weight;
+        double profPerKilogram;    // It's just no unit weight but kilo for fun.
 
 
         try {
@@ -188,7 +188,7 @@ public class Proj62 {
                     new Scanner(file);
             capacity = fileScanner.nextInt();
             numItems = fileScanner.nextInt();
-            items = new int[3][numItems];
+            items = new double[3][numItems];
             int j = 0;
             while (fileScanner.hasNext()) {
                 profit = fileScanner.nextInt();
